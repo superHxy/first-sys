@@ -3,7 +3,7 @@ session_start();
 require_once 'config.php';
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+    header("Location: ../user/main_dashboard_user.php");
     exit();
 }
 
@@ -32,8 +32,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['role'] = $user['role'];
 
             session_regenerate_id(true); // Regenerate session ID to prevent session fixation
-
-            header("Location: ../admin_working_Copy/main_dashboard.php");
+            
+            // Redirect based on role
+            if ($user['role'] === 'admin') {
+                header("Location: ../admin_working_Copy/main_dashboard.php");
+            } elseif ($user['role'] === 'user') {
+                header("Location: ../user/main_dashboard_user.php");
+            } else {
+                $error = "Invalid role assigned.";
+            }
             exit();
         } else {
             $error = "Invalid username or password";
@@ -45,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $conn->close();
 }
+
 ?>
 
 <!DOCTYPE html>

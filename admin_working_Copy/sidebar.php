@@ -128,7 +128,7 @@
         <a href="content_list.php">News</a>
         <a href="events_list.php">Events</a>
         <a href="ad_dashboard_copy.php">Schedule Announcement</a>
-        <a href="#">Log Out</a>
+        <a href="../login_system/logout.php">Log Out</a>
 
         <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
             <p class="text-center text-xs text-red-700">&copy; 2024 EAMU University. All Rights Reserved.</p>
