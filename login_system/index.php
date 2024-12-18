@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="login-container">
             <div class="login-form">
                 <div class="logo">
-                    <img src="../img/EAMU-1024x438.png" alt="EAMU Logo">
+                    <img src="../admin_working_copy/img/EAMU-1024x438.png" alt="EAMU Logo">
                 </div>
                 <h1>Welcome to EAMUPortal 👋</h1>
                 <p class="subtitle">Today is a new day. It's your day. You shape it.<br>Sign in to start managing your projects.</p>
