@@ -70,8 +70,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- CSS -->
-    <link rel="stylesheet" href="../login_css/style.css">
-    <link rel="stylesheet" href="../login_css/form.css">
+    <link rel="stylesheet" href="login_css/form.css">
+    <link rel="stylesheet" href="login_css/style.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -156,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </form>
             </div>
             <div class="building-image">
-                <img src="../img/cambodia 2016-2019.jpg" alt="EAMU Building">
+                <img src="../admin_working_Copy/img/cambodia 2016-2019.jpg" alt="EAMU Building">
             </div>
         </div>
         <footer>
