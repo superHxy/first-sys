@@ -62,7 +62,7 @@
             <div x-show="tab === 'news'" class="bg-white p-6 rounded-lg shadow-lg">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Latest News</h2>
-                    <a href="content_list.php" class="text-red-700 underline">View More</a>
+                    <a href="content_list_user.php" class="text-red-700 underline">View More</a>
                 </div>
                 <?php if (!empty($news_items)): ?>
                     <div class="space-y-4">
@@ -82,7 +82,7 @@
             <div x-show="tab === 'schedules'" class="bg-white p-6 rounded-lg shadow-lg">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Upcoming Schedules</h2>
-                    <a href="ad_dashboard_copy.php" class="text-red-700 underline">View More</a>
+                    <a href="ad_dashboard_user.php" class="text-red-700 underline">View More</a>
                 </div>
                 <?php if (!empty($schedules)): ?>
                     <table class="w-full table-auto">
@@ -141,7 +141,7 @@
             <div x-show="tab === 'events'" class="bg-white p-6 rounded-lg shadow-lg">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Upcoming Events</h2>
-                    <a href="events_list.php" class="text-red-700 underline">View More</a>
+                    <a href="events_list_user.php" class="text-red-700 underline">View More</a>
                 </div>
                 <?php if (!empty($events)): ?>
                     <ul class="space-y-4">

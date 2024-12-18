@@ -125,7 +125,7 @@
             <img src="img_user/EAMU-1024x438.png" alt="EAMU Logo">
         </div>
         <a href="main_dashboard_user.php">Dashboard</a>
-        <a href="content_list.php">News</a>
+        <a href="content_list_user.php">News</a>
         <a href="events_list_user.php">Events</a>
         <a href="ad_dashboard_user.php">Schedule Announcement</a>
         <a href="../login_system/logout.php">Log Out</a>

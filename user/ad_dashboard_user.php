@@ -8,8 +8,25 @@ include('sidebar_user.php');
 // Error and success messages
 $error_message = $success_message = '';
 
-// Fetch existing schedules
-$schedules = get_schedules();
+// Fetch existing schedules with error handling
+$schedules = [];
+try {
+    // Fetch schedules and ensure it's an array
+    $fetchedSchedules = get_schedules();
+    
+    // Check if fetchedSchedules is actually an array
+    if (is_array($fetchedSchedules)) {
+        $schedules = $fetchedSchedules;
+    } else {
+        // Log the error or set an error message
+        error_log('get_schedules() did not return an array');
+        $error_message = "Unable to retrieve schedules. Please contact support.";
+    }
+} catch (Exception $e) {
+    // Catch any exceptions from get_schedules()
+    error_log('Error fetching schedules: ' . $e->getMessage());
+    $error_message = "Error retrieving schedules: " . $e->getMessage();
+}
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -45,87 +62,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>University Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <div class="main-content">
-        <!-- Success or Error Messages -->
-        <?php if (!empty($success_message)): ?>
-            <div class="bg-green-200 text-green-800 px-4 py-2 rounded mb-4">
-                <?= htmlspecialchars($success_message); ?>
-            </div>
-        <?php elseif (!empty($error_message)): ?>
+        <!-- Error Handling -->
+        <?php if (!empty($error_message)): ?>
             <div class="bg-red-200 text-red-800 px-4 py-2 rounded mb-4">
                 <?= htmlspecialchars($error_message); ?>
             </div>
         <?php endif; ?>
-        <h1 class="text-2xl font-bold mb-4">Schedule Management</h1>
-        <!-- Add Schedule Form -->
-       
-            
-            <!-- <form action="ad_dashboard_copy.php" method="POST" class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="course" class="block text-sm font-medium">Course</label>
-                    <input type="text" id="course" name="course" value="<?= isset($course) ? htmlspecialchars($course) : ''; ?>" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500" required>
-                </div>
-                <div>
-                    <label for="lecturer" class="block text-sm font-medium">Lecturer</label>
-                    <input type="text" id="lecturer" name="lecturer" value="<?= isset($lecturer) ? htmlspecialchars($lecturer) : ''; ?>" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500" required>
-                </div>
-                <div>
-                    <label for="room" class="block text-sm font-medium">Room</label>
-                    <input type="text" id="room" name="room" value="<?= isset($room) ? htmlspecialchars($room) : ''; ?>" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500" required>
-                </div>
-                <div>
-                    <label for="schedule_date" class="block text-sm font-medium">Date</label>
-                    <input type="date" id="schedule_date" name="schedule_date" value="<?= isset($schedule_date) ? htmlspecialchars($schedule_date) : ''; ?>" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500" required>
-                </div>
-                <div>
-                    <label for="start_time" class="block text-sm font-medium">Start Time</label>
-                    <input type="time" id="start_time" name="start_time" value="<?= isset($start_time) ? htmlspecialchars($start_time) : ''; ?>" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500" required>
-                </div>
-                <div>
-                    <label for="end_time" class="block text-sm font-medium">End Time</label>
-                    <input type="time" id="end_time" name="end_time" value="<?= isset($end_time) ? htmlspecialchars($end_time) : ''; ?>" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500" required>
-                </div>
-                <div class="col-span-2">
-                    <label for="status" class="block text-sm font-medium">Status</label>
-                    <select id="status" name="status" class="w-full px-2 py-1 border rounded focus:ring-1 focus:ring-blue-500" required>
-                        <option value="usual" <?= isset($status) && $status == 'usual' ? 'selected' : ''; ?>>Usual</option>
-                        <option value="no-class" <?= isset($status) && $status == 'no-class' ? 'selected' : ''; ?>>No Class</option>
-                        <option value="make-up" <?= isset($status) && $status == 'make-up' ? 'selected' : ''; ?>>Make-up</option>
-                    </select>
-                </div>
-                <div class="col-span-2 flex justify-end">
-                    <button type="submit" class="px-4 py-2 bg-red-600 text-white font-bold rounded hover:bg-red-700">Add Schedule</button>
-                </div>
-            </form> -->
-        
 
-        <!-- Schedule List -->
+        <?php if (!empty($success_message)): ?>
+            <div class="bg-green-200 text-green-800 px-4 py-2 rounded mb-4">
+                <?= htmlspecialchars($success_message); ?>
+            </div>
+        <?php endif; ?>
+
         <div class="bg-white p-6 rounded-lg shadow-md">
-            
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-semibold">
+                    <span class="mr-2">
+                        <i class="fas fa-calendar-check text-blue-600"></i>
+                    </span>
+                    Schedule List
+                </h2>
 
-        <div class="flex items-center justify-between mb-6">
-                    <!-- Title with Icon -->
-                    <h2 class="text-2xl font-semibold">
-                        <span class="mr-2">
-                            <i class="fas fa-calendar-check text-blue-600"></i>
-                        </span>
-                        Schedule List
-                    </h2>
-
-
-                    <div class="flex space-x-4">
-                        <a href="history.php" 
-                        class="flex items-center text-gray-600 hover:text-red-600 transition-all duration-300 ease-in-out">
-                            <i class="fas fa-history mr-2"></i> History
-                        </a>
-                        
+                <div class="flex space-x-4">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="scheduleFilter" 
+                            placeholder="Search schedules..." 
+                            class="w-64 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-red-600 pl-10"
+                        >
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
+
+                    <a href="history_user.php" 
+                    class="flex items-center text-gray-600 hover:text-red-600 transition-all duration-300 ease-in-out">
+                        <i class="fas fa-history mr-2"></i> History
+                    </a>
+                    
                 </div>
+            </div>
 
-
-            <table class="w-full border-collapse">
+            <table id="schedulesTable" class="w-full border-collapse">
                 <thead>
                     <tr>
                         <th class="border px-4 py-2">Course</th>
@@ -139,30 +121,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </tr>
                 </thead>
                 <tbody>
-                   
-                    <?php // foreach ($schedules as $schedule): ?>
-                    <?php 
-                        for($i=0; $i<count($schedules); $i++)  {  
-                    ?>
+                    <?php if (!empty($schedules)): ?>
+                        <?php foreach ($schedules as $schedule): ?>
+                            <tr>
+                                <td class="border px-4 py-2"><?= htmlspecialchars($schedule['course']); ?></td>
+                                <td class="border px-4 py-2"><?= htmlspecialchars($schedule['lecturer']); ?></td>
+                                <td class="border px-4 py-2"><?= htmlspecialchars($schedule['room']); ?></td>
+                                <td class="border px-4 py-2"><?= htmlspecialchars($schedule['schedule_date']); ?></td>
+                                <td class="border px-4 py-2"><?= htmlspecialchars($schedule['start_time']); ?></td>
+                                <td class="border px-4 py-2"><?= htmlspecialchars($schedule['end_time']); ?></td>
+                                <td class="border px-4 py-2">
+                                    <span class="px-2 py-1 rounded bg-<?= $schedule['status'] == 'no-class' ? 'red' : ($schedule['status'] == 'make-up' ? 'yellow' : 'green'); ?>-200 text-<?= $schedule['status'] == 'no-class' ? 'red' : ($schedule['status'] == 'make-up' ? 'yellow' : 'green'); ?>-800">
+                                        <?= htmlspecialchars(ucfirst($schedule['status'])); ?>
+                                    </span>
+                                </td>
+                                
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <td class="border px-4 py-2"><?= htmlspecialchars($schedules[$i]['course']); ?></td>
-                            <td class="border px-4 py-2"><?= htmlspecialchars($schedules[$i]['lecturer']); ?></td>
-                            <td class="border px-4 py-2"><?= htmlspecialchars($schedules[$i]['room']); ?></td>
-                            <td class="border px-4 py-2"><?= htmlspecialchars($schedules[$i]['schedule_date']); ?></td>
-                            <td class="border px-4 py-2"><?= htmlspecialchars($schedules[$i]['start_time']); ?></td>
-                            <td class="border px-4 py-2"><?= htmlspecialchars($schedules[$i]['end_time']); ?></td>
-                            <td class="border px-4 py-2">
-                                <span class="px-2 py-1 rounded bg-<?= $schedules[$i]['status'] == 'no-class' ? 'red' : ($schedules[$i]['status'] == 'make-up' ? 'yellow' : 'green'); ?>-200 text-<?= $schedules[$i]['status'] == 'no-class' ? 'red' : ($schedules[$i]['status'] == 'make-up' ? 'yellow' : 'green'); ?>-800">
-                                    <?= htmlspecialchars(ucfirst($schedules[$i]['status'])); ?>
-                                </span>
+                            <td colspan="8" class="text-center py-4 text-gray-500">
+                                No schedules found.
                             </td>
-                            
                         </tr>
-                    <?php } ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- JavaScript for filtering -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterInput = document.getElementById('scheduleFilter');
+            const table = document.getElementById('schedulesTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            filterInput.addEventListener('keyup', function() {
+                const filterValue = this.value.toLowerCase().trim();
+
+                for (let row of rows) {
+                    // Skip the "No schedules found" row
+                    if (row.querySelector('td[colspan]')) continue;
+
+                    let match = false;
+                    const cells = row.getElementsByTagName('td');
+
+                    // Check each cell for a match
+                    for (let cell of cells) {
+                        if (cell.textContent.toLowerCase().includes(filterValue)) {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    // Show or hide row based on match
+                    row.style.display = match ? '' : 'none';
+                }
+            });
+        });
+    </script>
+
 <?php ob_end_flush(); ?>
 </body>
 </html>

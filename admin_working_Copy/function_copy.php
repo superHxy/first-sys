@@ -5,7 +5,7 @@ require_once 'config_copy.php';
 // Function to fetch events from the database
 function get_schedules() {
     global $conn;
-    $result = $conn->query("SELECT * FROM schedules ORDER BY schedule_date DESC");
+    $result = $conn->query("SELECT * FROM schedules ORDER BY schedule_date ASC,start_time ASC");
     if ($result) {
         return $result->fetch_all(MYSQLI_ASSOC); // Ensure this returns an array of associative arrays
     }
@@ -103,9 +103,6 @@ function get_news() {
 }
 
 
-
-
-
 function fetchAllNews($conn) {
     $sql = "SELECT id, title, description, file_path, created_at FROM content ORDER BY id DESC";
     $stmt = $conn->prepare($sql);
@@ -161,3 +158,86 @@ function add_schedule($course, $lecturer, $room, $schedule_date, $start_time, $e
 
     return false; // Failure
 }
+
+function transferSchedulesToHistory() {
+    global $conn;
+
+    // Start a transaction to ensure data integrity
+    $conn->begin_transaction();
+
+    try {
+        // Get current date and time
+        $current_datetime = date('Y-m-d H:i:s');
+
+        // Prepare statement to select schedules to transfer
+        $select_stmt = $conn->prepare("
+            SELECT * FROM schedules 
+            WHERE CONCAT(schedule_date, ' ', end_time) < ?
+        ");
+        $select_stmt->bind_param('s', $current_datetime);
+        $select_stmt->execute();
+        $result = $select_stmt->get_result();
+
+        // Counter for transferred schedules
+        $transferred_count = 0;
+
+        // Process each expired schedule
+        while ($schedule = $result->fetch_assoc()) {
+            // Insert into history table
+            $insert_stmt = $conn->prepare("
+                INSERT INTO schedule_history (
+                    course, lecturer, room, schedule_date, 
+                    start_time, end_time, status
+                ) VALUES (
+                    ?, ?, ?, ?, ?, ?, ?
+                )
+            ");
+            $insert_stmt->bind_param(
+                'sssssss', 
+                $schedule['course'], 
+                $schedule['lecturer'], 
+                $schedule['room'], 
+                $schedule['schedule_date'], 
+                $schedule['start_time'], 
+                $schedule['end_time'], 
+                $schedule['status']
+            );
+            $insert_stmt->execute();
+
+            // Delete from original schedules table
+            $delete_stmt = $conn->prepare("DELETE FROM schedules WHERE id = ?");
+            $delete_stmt->bind_param('i', $schedule['id']);
+            $delete_stmt->execute();
+
+            $transferred_count++;
+        }
+
+        // Commit the transaction
+        $conn->commit();
+
+        // Log the transfer
+        error_log("Transferred $transferred_count schedules to history on " . date('Y-m-d H:i:s'));
+
+        return $transferred_count;
+
+    } catch (Exception $e) {
+        // Rollback the transaction in case of error
+        $conn->rollback();
+        
+        // Log the error
+        error_log("Error transferring schedules: " . $e->getMessage());
+        return false;
+    }
+}
+
+// If this script is run directly
+if (basename($_SERVER['PHP_SELF']) === basename(__FILE__)) {
+    $transferred = transferSchedulesToHistory();
+    
+    if ($transferred !== false) {
+        echo "Successfully transferred $transferred schedules to history.";
+    } else {
+        echo "An error occurred during schedule transfer.";
+    }
+}
+?>

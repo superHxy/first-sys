@@ -119,15 +119,16 @@
                                                 break;
                                         }
                                     ?>
-                                <tr class="hover:bg-gray-100 transition <?= strtotime($schedule['end_time']) < strtotime($now) ? 'text-gray-400 line-through' : '' ?>">
-                                    <td class="p-3"><?= htmlspecialchars($schedule['course']); ?></td>
-                                    <td class="p-3"><?= htmlspecialchars($schedule['lecturer']); ?></td>
-                                    <td class="p-3"><?= htmlspecialchars($schedule['room']); ?></td>
-                                    <td class="p-3"><?= htmlspecialchars(date('F j, Y', strtotime($schedule['schedule_date']))); ?></td>
-                                    <td class="p-3"><?= htmlspecialchars(date('g:i A', strtotime($schedule['start_time']))); ?></td>
-                                    <td class="p-3"><?= htmlspecialchars(date('g:i A', strtotime($schedule['end_time']))); ?></td>
-                                    <td class="p-3 <?= $statusColor; ?>"><?= htmlspecialchars(ucfirst($status)); ?></td>
-                                </tr>
+                                <tr class="hover:bg-gray-100 transition <?= strtotime($schedule['end_time']) < strtotime($now) ? 'text-black-400' : '' ?>">
+                                <td class="p-3"><?= htmlspecialchars($schedule['course']); ?></td>
+                                <td class="p-3"><?= htmlspecialchars($schedule['lecturer']); ?></td>
+                                <td class="p-3"><?= htmlspecialchars($schedule['room']); ?></td>
+                                <td class="p-3"><?= htmlspecialchars(date('F j, Y', strtotime($schedule['schedule_date']))); ?></td>
+                                <td class="p-3"><?= htmlspecialchars(date('g:i A', strtotime($schedule['start_time']))); ?></td>
+                                <td class="p-3"><?= htmlspecialchars(date('g:i A', strtotime($schedule['end_time']))); ?></td>
+                                <td class="p-3 <?= $statusColor; ?>"><?= htmlspecialchars(ucfirst($status)); ?></td>
+                            </tr>
+
                             <?php endif; ?>
                             <?php endforeach; ?>
                         </tbody>
