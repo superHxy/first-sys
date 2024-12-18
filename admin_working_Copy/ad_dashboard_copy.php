@@ -58,10 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?= htmlspecialchars($error_message); ?>
             </div>
         <?php endif; ?>
-
+        <h1 class="text-2xl font-bold mb-4">Schedule Management</h1>
         <!-- Add Schedule Form -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-bold mb-4">Add New Schedule</h2>
+       
+            
             <!-- <form action="ad_dashboard_copy.php" method="POST" class="grid grid-cols-2 gap-4">
                 <div>
                     <label for="course" class="block text-sm font-medium">Course</label>
@@ -99,13 +99,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="submit" class="px-4 py-2 bg-red-600 text-white font-bold rounded hover:bg-red-700">Add Schedule</button>
                 </div>
             </form> -->
-        </div>
+        
 
         <!-- Schedule List -->
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Schedule List</h2>
-            <a href="add_schedule2.php">add schedule</a>
-            <a href="history.php">history</a>
+            
+
+        <div class="flex items-center justify-between mb-6">
+                    <!-- Title with Icon -->
+                    <h2 class="text-2xl font-semibold">
+                        <span class="mr-2">
+                            <i class="fas fa-calendar-check text-blue-600"></i>
+                        </span>
+                        Schedule List
+                    </h2>
+
+
+                    <div class="flex space-x-4">
+                        <a href="history.php" 
+                        class="flex items-center text-gray-600 hover:text-red-600 transition-all duration-300 ease-in-out">
+                            <i class="fas fa-history mr-2"></i> History
+                        </a>
+                        <a href="add_schedule2.php" 
+                        class="flex items-center px-5 py-2 border-2 border-red-600 text-red-600 bg-white rounded-full hover:bg-red-600 hover:text-white transition-all duration-300 ease-in-out shadow-md">
+                            <i class="fas fa-plus-circle mr-2"></i> Add Events
+                        </a>
+                    </div>
+                </div>
+
+
             <table class="w-full border-collapse">
                 <thead>
                     <tr>

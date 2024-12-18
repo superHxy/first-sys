@@ -82,6 +82,7 @@
             <div x-show="tab === 'schedules'" class="bg-white p-6 rounded-lg shadow-lg">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-semibold">Upcoming Schedules</h2>
+                    <a href="ad_dashboard_copy.php" class="text-red-700 underline">View More</a>
                 </div>
                 <?php if (!empty($schedules)): ?>
                     <table class="w-full table-auto">

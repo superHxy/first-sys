@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             session_regenerate_id(true); // Regenerate session ID to prevent session fixation
 
-            header("Location: dashboard.php");
+            header("Location: ../admin_working_Copy/main_dashboard.php");
             exit();
         } else {
             $error = "Invalid username or password";
